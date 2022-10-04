@@ -2,6 +2,12 @@
 
 Main VOxOV Frontend
 
+## Generate gRPC code
+
+Clone VOxOV right next to this repo.
+
+    protoc --dart_out=grpc:lib/src/generated -I ../voxov/api -Iprotos ../voxov/api/voxov.proto
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
