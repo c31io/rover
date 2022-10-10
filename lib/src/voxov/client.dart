@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
 import '../generated/voxov.pbgrpc.dart';
 
-class Client {
+class VClient {
   final Object host;
   final int port;
   final ChannelCredentials credentials;
@@ -14,9 +14,9 @@ class Client {
 
   late List<int> token;
 
-  var sessionActive = false;
+  bool sessionActive = false;
 
-  Client(this.host, this.port, this.credentials, this.ttl) {
+  VClient(this.host, this.port, this.credentials, this.ttl) {
     channel = ClientChannel(host,
         port: port,
         options: ChannelOptions(
@@ -27,7 +27,7 @@ class Client {
     stub = VOxOVClient(channel);
   }
 
-  Client.local()
+  VClient.local()
       : host = 'localhost',
         port = 10001,
         credentials = const ChannelCredentials.insecure(),
@@ -75,6 +75,7 @@ class Client {
     sessionActive = true;
     final r = await createSession();
     token = r.token;
+    if (token == <int>[]) stopSession();
     while (sessionActive) {
       await Future.delayed(Duration(seconds: ttl.toInt() ~/ 2));
       if (!(await updateSession()).ok) {
