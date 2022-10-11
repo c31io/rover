@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'src/cloud.dart';
 
 void main() => runApp(const MyApp());
 
@@ -20,14 +21,12 @@ class HomeWidget extends StatefulWidget {
   const HomeWidget({Key? key}) : super(key: key);
 
   @override
-  State<HomeWidget> createState() => Navigation();
+  State<HomeWidget> createState() => HomeWidgetState();
 }
 
-class Navigation extends State<HomeWidget> {
+class HomeWidgetState extends State<HomeWidget> {
   static const List<Widget> views = <Widget>[
-    Text(
-      'Index 0',
-    ),
+    CloudWidget(),
     Text(
       'Index 1',
     ),
@@ -63,13 +62,13 @@ class Navigation extends State<HomeWidget> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Person',
+            icon: Icon(Icons.cloud),
+            label: 'Cloud',
             tooltip: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.cloud),
-            label: 'Cloud',
+            icon: Icon(Icons.person),
+            label: 'Person',
             tooltip: '',
           ),
           BottomNavigationBarItem(
