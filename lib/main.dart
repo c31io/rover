@@ -73,7 +73,7 @@ class HomeWidgetState extends State<HomeWidget> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.battery_charging_full),
-            label: 'Pay',
+            label: 'Energy',
             tooltip: '',
           ),
           BottomNavigationBarItem(

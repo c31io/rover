@@ -4,7 +4,7 @@ import 'package:grpc/grpc.dart';
 import '../generated/voxov.pbgrpc.dart';
 
 class VClient {
-  final Object host;
+  final String host;
   final int port;
   final ChannelCredentials credentials;
   final Int64 ttl;
