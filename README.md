@@ -8,6 +8,14 @@ Clone VOxOV right next to this repo.
 
     protoc --dart_out=grpc:lib/src/generated -I ../voxov/api -Iprotos ../voxov/api/voxov.proto
 
+## Generate Isar code
+
+    flutter pub run build_runner build
+
+## Install dependencies
+
+    sudo apt install libsecret-1-dev libjsoncpp-dev libsecret-1-0
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

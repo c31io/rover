@@ -1,24 +1,26 @@
 import 'dart:core';
-
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:grpc/grpc.dart';
 import 'package:isar/isar.dart';
 import 'package:rover/src/voxov/client.dart';
 
 part 'cloud.g.dart';
 
-class CloudWidget extends StatefulWidget {
-  const CloudWidget({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => CloudWidgetState();
-}
-
 @collection
 class Server {
-  Id? id;
+  Id id = Isar.autoIncrement;
   int? index;
   String? name;
-  String? url;
+  String? host;
+  int? port;
+
+  @ignore
+  Int64? ttl;
+
+  @ignore
+  ChannelCredentials? credentials;
 
   @ignore
   VClient? client;
@@ -27,23 +29,112 @@ class Server {
   List<int>? dToken; // stored in flutter_secure_storage not Isar
 }
 
-class CloudWidgetState extends State<CloudWidget> {
-  // Read server from Isar, if none create local
-  // Need to move Server higher
+class ServersProvider with ChangeNotifier {
+  ServersProvider() {
+    init();
+  }
+
+  List<Server> _servers = [];
+
+  List<Server> get servers => _servers;
+
+  late Isar isar;
+
+  void init() async {
+    isar = await Isar.open([ServerSchema]);
+
+    await isar.txn(() async {
+      final serversCollection = isar.servers;
+      _servers = await serversCollection.where().findAll();
+      notifyListeners();
+    });
+  }
+
+  void addServer(Server server) async {
+    await isar.writeTxn(() async {
+      await isar.servers.put(server);
+    });
+    _servers.add(server);
+    notifyListeners();
+  }
+
+  void deleteServer(Server server) async {
+    await isar.writeTxn(() async {
+      bool deleted = await isar.servers.delete(server.id);
+      if (deleted) _servers.remove(server);
+      notifyListeners();
+    });
+  }
+
+  void connectServer(Server server) async {
+    server.client ??= VClient(
+        server.host ?? 'localhost',
+        server.port ?? 10001,
+        server.credentials ?? const ChannelCredentials.insecure(),
+        server.ttl ?? 600 as Int64,
+    );
+    server.client?.startSession();
+  }
+
+  void disconnectServer(Server server) async {
+    server.client?.stopSession();
+  }
+
+  void toggleServer(Server server) async {
+    if (server.client?.sessionActive ?? false) {
+      connectServer(server);
+    } else {
+      disconnectServer(server);
+    }
+  }
+}
+
+class CloudWidget extends StatelessWidget {
+  const CloudWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    //final isar = () async {return await Isar.open([ServerSchema]);}();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Disconnected'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: Column(
-          children: const <Widget>[])
-    );
+        appBar: AppBar(
+          title: const Text('Disconnected'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
+        body: Column(
+          children: context
+              .watch<ServersProvider>()
+              .servers
+              .map((server) => ListTile(
+                    leading: Text(server.id.toString()),
+                    title: Text(server.name ?? 'Unnamed'),
+                    subtitle: Text(server.host.toString()),
+                    trailing: SizedBox(
+                      width: 100,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                              onPressed: () => context
+                                  .read<ServersProvider>()
+                                  .toggleServer(server),
+                              icon: Icon(
+                                Icons.star,
+                                color: server.client?.sessionActive ?? false
+                                    ? Colors.yellow
+                                    : Colors.grey,
+                              )),
+                          IconButton(
+                              onPressed: () {
+                                context.read<ServersProvider>().deleteServer(server);
+                              },
+                              icon: const Icon(Icons.delete)),
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ));
   }
 }

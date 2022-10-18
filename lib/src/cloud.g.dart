@@ -17,20 +17,25 @@ const ServerSchema = CollectionSchema(
   name: r'Server',
   id: -6947657830638655508,
   properties: {
-    r'index': PropertySchema(
+    r'host': PropertySchema(
       id: 0,
+      name: r'host',
+      type: IsarType.string,
+    ),
+    r'index': PropertySchema(
+      id: 1,
       name: r'index',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
-    r'url': PropertySchema(
-      id: 2,
-      name: r'url',
-      type: IsarType.string,
+    r'port': PropertySchema(
+      id: 3,
+      name: r'port',
+      type: IsarType.long,
     )
   },
   estimateSize: _serverEstimateSize,
@@ -54,13 +59,13 @@ int _serverEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
-    final value = object.name;
+    final value = object.host;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
   }
   {
-    final value = object.url;
+    final value = object.name;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -74,9 +79,10 @@ void _serverSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.index);
-  writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.url);
+  writer.writeString(offsets[0], object.host);
+  writer.writeLong(offsets[1], object.index);
+  writer.writeString(offsets[2], object.name);
+  writer.writeLong(offsets[3], object.port);
 }
 
 Server _serverDeserialize(
@@ -86,10 +92,11 @@ Server _serverDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Server();
+  object.host = reader.readStringOrNull(offsets[0]);
   object.id = id;
-  object.index = reader.readLongOrNull(offsets[0]);
-  object.name = reader.readStringOrNull(offsets[1]);
-  object.url = reader.readStringOrNull(offsets[2]);
+  object.index = reader.readLongOrNull(offsets[1]);
+  object.name = reader.readStringOrNull(offsets[2]);
+  object.port = reader.readLongOrNull(offsets[3]);
   return object;
 }
 
@@ -101,18 +108,20 @@ P _serverDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongOrNull(offset)) as P;
-    case 1:
       return (reader.readStringOrNull(offset)) as P;
+    case 1:
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 Id _serverGetId(Server object) {
-  return object.id ?? Isar.autoIncrement;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _serverGetLinks(Server object) {
@@ -199,23 +208,152 @@ extension ServerQueryWhere on QueryBuilder<Server, Server, QWhereClause> {
 }
 
 extension ServerQueryFilter on QueryBuilder<Server, Server, QFilterCondition> {
-  QueryBuilder<Server, Server, QAfterFilterCondition> idIsNull() {
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'id',
+        property: r'host',
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> idIsNotNull() {
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'id',
+        property: r'host',
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> idEqualTo(Id? value) {
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'host',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'host',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'host',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'host',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'host',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'host',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'host',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'host',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'host',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> hostIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'host',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -225,7 +363,7 @@ extension ServerQueryFilter on QueryBuilder<Server, Server, QFilterCondition> {
   }
 
   QueryBuilder<Server, Server, QAfterFilterCondition> idGreaterThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -238,7 +376,7 @@ extension ServerQueryFilter on QueryBuilder<Server, Server, QFilterCondition> {
   }
 
   QueryBuilder<Server, Server, QAfterFilterCondition> idLessThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -251,8 +389,8 @@ extension ServerQueryFilter on QueryBuilder<Server, Server, QFilterCondition> {
   }
 
   QueryBuilder<Server, Server, QAfterFilterCondition> idBetween(
-    Id? lower,
-    Id? upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -480,146 +618,70 @@ extension ServerQueryFilter on QueryBuilder<Server, Server, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlIsNull() {
+  QueryBuilder<Server, Server, QAfterFilterCondition> portIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'url',
+        property: r'port',
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlIsNotNull() {
+  QueryBuilder<Server, Server, QAfterFilterCondition> portIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'url',
+        property: r'port',
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Server, Server, QAfterFilterCondition> portEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'url',
+        property: r'port',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlGreaterThan(
-    String? value, {
+  QueryBuilder<Server, Server, QAfterFilterCondition> portGreaterThan(
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'url',
+        property: r'port',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlLessThan(
-    String? value, {
+  QueryBuilder<Server, Server, QAfterFilterCondition> portLessThan(
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'url',
+        property: r'port',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlBetween(
-    String? lower,
-    String? upper, {
+  QueryBuilder<Server, Server, QAfterFilterCondition> portBetween(
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'url',
+        property: r'port',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'url',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'url',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'url',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'url',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'url',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Server, Server, QAfterFilterCondition> urlIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'url',
-        value: '',
       ));
     });
   }
@@ -630,6 +692,18 @@ extension ServerQueryObject on QueryBuilder<Server, Server, QFilterCondition> {}
 extension ServerQueryLinks on QueryBuilder<Server, Server, QFilterCondition> {}
 
 extension ServerQuerySortBy on QueryBuilder<Server, Server, QSortBy> {
+  QueryBuilder<Server, Server, QAfterSortBy> sortByHost() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'host', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterSortBy> sortByHostDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'host', Sort.desc);
+    });
+  }
+
   QueryBuilder<Server, Server, QAfterSortBy> sortByIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'index', Sort.asc);
@@ -654,20 +728,32 @@ extension ServerQuerySortBy on QueryBuilder<Server, Server, QSortBy> {
     });
   }
 
-  QueryBuilder<Server, Server, QAfterSortBy> sortByUrl() {
+  QueryBuilder<Server, Server, QAfterSortBy> sortByPort() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.asc);
+      return query.addSortBy(r'port', Sort.asc);
     });
   }
 
-  QueryBuilder<Server, Server, QAfterSortBy> sortByUrlDesc() {
+  QueryBuilder<Server, Server, QAfterSortBy> sortByPortDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.desc);
+      return query.addSortBy(r'port', Sort.desc);
     });
   }
 }
 
 extension ServerQuerySortThenBy on QueryBuilder<Server, Server, QSortThenBy> {
+  QueryBuilder<Server, Server, QAfterSortBy> thenByHost() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'host', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterSortBy> thenByHostDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'host', Sort.desc);
+    });
+  }
+
   QueryBuilder<Server, Server, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -704,20 +790,27 @@ extension ServerQuerySortThenBy on QueryBuilder<Server, Server, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Server, Server, QAfterSortBy> thenByUrl() {
+  QueryBuilder<Server, Server, QAfterSortBy> thenByPort() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.asc);
+      return query.addSortBy(r'port', Sort.asc);
     });
   }
 
-  QueryBuilder<Server, Server, QAfterSortBy> thenByUrlDesc() {
+  QueryBuilder<Server, Server, QAfterSortBy> thenByPortDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.desc);
+      return query.addSortBy(r'port', Sort.desc);
     });
   }
 }
 
 extension ServerQueryWhereDistinct on QueryBuilder<Server, Server, QDistinct> {
+  QueryBuilder<Server, Server, QDistinct> distinctByHost(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'host', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Server, Server, QDistinct> distinctByIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'index');
@@ -731,10 +824,9 @@ extension ServerQueryWhereDistinct on QueryBuilder<Server, Server, QDistinct> {
     });
   }
 
-  QueryBuilder<Server, Server, QDistinct> distinctByUrl(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Server, Server, QDistinct> distinctByPort() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'url', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'port');
     });
   }
 }
@@ -743,6 +835,12 @@ extension ServerQueryProperty on QueryBuilder<Server, Server, QQueryProperty> {
   QueryBuilder<Server, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Server, String?, QQueryOperations> hostProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'host');
     });
   }
 
@@ -758,9 +856,9 @@ extension ServerQueryProperty on QueryBuilder<Server, Server, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Server, String?, QQueryOperations> urlProperty() {
+  QueryBuilder<Server, int?, QQueryOperations> portProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'url');
+      return query.addPropertyName(r'port');
     });
   }
 }
