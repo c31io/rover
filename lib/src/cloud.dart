@@ -108,7 +108,16 @@ class CloudWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Disconnected'),
+          leading:
+              context.read<ServersProvider>().selected?.client?.sessionActive ??
+                      false
+                  ? const Icon(Icons.cloud)
+                  : const Icon(Icons.cloud_off),
+          title:
+              context.read<ServersProvider>().selected?.client?.sessionActive ??
+                      false
+                  ? const Text('Connected')
+                  : const Text('Disconnected'),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () =>
