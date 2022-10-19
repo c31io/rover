@@ -35,11 +35,8 @@ class ServersProvider with ChangeNotifier {
   }
 
   List<Server> _servers = [];
-
-  Server? _selected;
-
   List<Server> get servers => _servers;
-
+  Server? _selected;
   Server? get selected => _selected;
 
   late Isar isar;
@@ -87,9 +84,11 @@ class ServersProvider with ChangeNotifier {
     server.client?.keepSession();
   }
 
-  void disconnectServer(Server server) async {
-    server.client?.stopSession();
-    notifyListeners();
+  Future<void> disconnectServer(Server server) async {
+    if (server.client?.sessionActive ?? false) {
+      await server.client?.stopSession();
+      notifyListeners();
+    }
   }
 
   void toggleServer(Server server) async {
@@ -102,6 +101,37 @@ class ServersProvider with ChangeNotifier {
 
   void selectServer(Server? server) async {
     _selected = server;
+    notifyListeners();
+  }
+
+  void updateServerName(Server server, String value) async {
+    if (server.name == value) return;
+    await isar.writeTxn(() async {
+      server.name = value.isEmpty ? null : value;
+      await isar.servers.put(server);
+    });
+    notifyListeners();
+  }
+
+  void updateServerHost(Server server, String value) async {
+    if (server.host == value) return;
+    await disconnectServer(server);
+    server.client = null;
+    await isar.writeTxn(() async {
+      server.host = value.isEmpty ? null : value;
+      await isar.servers.put(server);
+    });
+    notifyListeners();
+  }
+
+  void updateServerPort(Server server, int? value) async {
+    if (server.port == value) return;
+    await disconnectServer(server);
+    server.client = null;
+    await isar.writeTxn(() async {
+      server.port = value;
+      await isar.servers.put(server);
+    });
     notifyListeners();
   }
 }
@@ -142,17 +172,14 @@ class CloudWidget extends StatelessWidget {
                       },
                     ),
                     title: Text(server.name ?? 'Unnamed'),
-                    subtitle: Text(
-                        server.host == null ? 'Unset' : server.host.toString()),
+                    subtitle: Text(server.host == null
+                        ? 'localhost:${server.port ?? 10001}'
+                        : '${server.host}:${server.port ?? 10001}'),
                     trailing: SizedBox(
                       width: 120,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const IconButton(
-                            onPressed: null,
-                            icon: Icon(Icons.edit),
-                          ),
                           IconButton(
                               onPressed: () => context
                                   .read<ServersProvider>()
@@ -165,6 +192,52 @@ class CloudWidget extends StatelessWidget {
                                     ? Colors.blue
                                     : Colors.grey,
                               )),
+                          IconButton(
+                            onPressed: () => showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => SimpleDialog(
+                                  title: const Text('Edit server'),
+                                  contentPadding: const EdgeInsets.fromLTRB(
+                                      12.0, 12.0, 12.0, 16.0),
+                                  children: <Widget>[
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        labelText: 'Name',
+                                      ),
+                                      initialValue: server.name,
+                                      onFieldSubmitted: (value) {
+                                        context
+                                            .read<ServersProvider>()
+                                            .updateServerName(server, value);
+                                      },
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        labelText: 'Host',
+                                      ),
+                                      initialValue: server.host,
+                                      onFieldSubmitted: (value) {
+                                        context
+                                            .read<ServersProvider>()
+                                            .updateServerHost(server, value);
+                                      },
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        labelText: 'Port',
+                                      ),
+                                      initialValue: server.port?.toString(),
+                                      onFieldSubmitted: (value) {
+                                        context
+                                            .read<ServersProvider>()
+                                            .updateServerPort(
+                                                server, int.tryParse(value));
+                                      },
+                                    ),
+                                  ]),
+                            ),
+                            icon: const Icon(Icons.edit),
+                          ),
                           IconButton(
                               onPressed: () => showDialog<String>(
                                     context: context,
