@@ -80,13 +80,13 @@ class VClient {
   Future<void> keepSession() async {
     while (sessionActive) {
       await Future.delayed(Duration(seconds: ttl.toInt() ~/ 2));
-      if (!(await updateSession()).ok) {
+      if (sessionActive && !(await updateSession()).ok) {
         sessionActive = false;
       }
     }
   }
 
-  void stopSession() async {
+  Future<void> stopSession() async {
     sessionActive = false;
     try {
       await stub.updateSession(
