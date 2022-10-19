@@ -145,10 +145,14 @@ class CloudWidget extends StatelessWidget {
                     subtitle: Text(
                         server.host == null ? 'Unset' : server.host.toString()),
                     trailing: SizedBox(
-                      width: 100,
+                      width: 120,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          const IconButton(
+                            onPressed: null,
+                            icon: Icon(Icons.edit),
+                          ),
                           IconButton(
                               onPressed: () => context
                                   .read<ServersProvider>()
@@ -162,11 +166,37 @@ class CloudWidget extends StatelessWidget {
                                     : Colors.grey,
                               )),
                           IconButton(
-                              onPressed: () {
-                                context
-                                    .read<ServersProvider>()
-                                    .deleteServer(server);
-                              },
+                              onPressed: () => showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                        'Delete server?',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                      content:
+                                          const Text("This can't be undone."),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            context
+                                                .read<ServersProvider>()
+                                                .deleteServer(server);
+                                            Navigator.pop(context, 'Delete');
+                                          },
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                               icon: const Icon(Icons.delete)),
                         ],
                       ),
