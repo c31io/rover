@@ -36,7 +36,11 @@ class ServersProvider with ChangeNotifier {
 
   List<Server> _servers = [];
 
+  Server? _selected;
+
   List<Server> get servers => _servers;
+
+  Server? get selected => _selected;
 
   late Isar isar;
 
@@ -90,6 +94,11 @@ class ServersProvider with ChangeNotifier {
       connectServer(server);
     }
   }
+
+  void selectServer(Server? server) async {
+    _selected = server;
+    notifyListeners();
+  }
 }
 
 class CloudWidget extends StatelessWidget {
@@ -111,7 +120,13 @@ class CloudWidget extends StatelessWidget {
               .watch<ServersProvider>()
               .servers
               .map((server) => ListTile(
-                    leading: Text(server.id.toString()),
+                    leading: Radio<Server>(
+                      value: server,
+                      groupValue: context.read<ServersProvider>().selected,
+                      onChanged: (Server? server) {
+                        context.read<ServersProvider>().selectServer(server);
+                      },
+                    ),
                     title: Text(server.name ?? 'Unnamed'),
                     subtitle: Text(
                         server.host == null ? 'Unset' : server.host.toString()),
