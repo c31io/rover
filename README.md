@@ -14,9 +14,11 @@ Clone VOxOV right next to this repo.
 
 ## Install dependencies
 
-    sudo apt install libsecret-1-dev libjsoncpp-dev libsecret-1-0
+    sudo apt install libsecret-1-dev libjsoncpp-dev libsecret-1-0 libgtkd-3-dev clang ninja-build cmake
 
 ## Getting Started
+
+Don't install flutter SDK with snap on Linux. Try git.
 
 This project is a starting point for a Flutter application.
 
