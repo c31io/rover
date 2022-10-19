@@ -148,11 +148,15 @@ class CloudWidget extends StatelessWidget {
                       false
                   ? const Icon(Icons.cloud)
                   : const Icon(Icons.cloud_off),
-          title:
-              context.read<ServersProvider>().selected?.client?.sessionActive ??
-                      false
-                  ? const Text('Connected')
-                  : const Text('Disconnected'),
+          title: context
+                      .read<ServersProvider>()
+                      .selected
+                      ?.client
+                      ?.sessionActive ??
+                  false
+              ? Text(
+                  'Connected${context.read<ServersProvider>().selected!.client!.channel.options.credentials.isSecure ? '' : ' (Unsafe)'}')
+              : const Text('Disconnected'),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () =>
