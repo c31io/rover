@@ -68,23 +68,26 @@ class ServersProvider with ChangeNotifier {
 
   void connectServer(Server server) async {
     server.client ??= VClient(
-        server.host ?? 'localhost',
-        server.port ?? 10001,
-        server.credentials ?? const ChannelCredentials.insecure(),
-        server.ttl ?? 600 as Int64,
+      server.host ?? 'localhost',
+      server.port ?? 10001,
+      server.credentials ?? const ChannelCredentials.insecure(),
+      server.ttl ?? Int64(600),
     );
-    server.client?.startSession();
+    await server.client?.startSession();
+    notifyListeners();
+    server.client?.keepSession();
   }
 
   void disconnectServer(Server server) async {
     server.client?.stopSession();
+    notifyListeners();
   }
 
   void toggleServer(Server server) async {
     if (server.client?.sessionActive ?? false) {
-      connectServer(server);
-    } else {
       disconnectServer(server);
+    } else {
+      connectServer(server);
     }
   }
 }
@@ -99,7 +102,8 @@ class CloudWidget extends StatelessWidget {
           title: const Text('Disconnected'),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () =>
+              {context.read<ServersProvider>().addServer(Server())},
           child: const Icon(Icons.add),
         ),
         body: Column(
@@ -109,7 +113,8 @@ class CloudWidget extends StatelessWidget {
               .map((server) => ListTile(
                     leading: Text(server.id.toString()),
                     title: Text(server.name ?? 'Unnamed'),
-                    subtitle: Text(server.host.toString()),
+                    subtitle: Text(
+                        server.host == null ? 'Unset' : server.host.toString()),
                     trailing: SizedBox(
                       width: 100,
                       child: Row(
@@ -120,14 +125,18 @@ class CloudWidget extends StatelessWidget {
                                   .read<ServersProvider>()
                                   .toggleServer(server),
                               icon: Icon(
-                                Icons.star,
+                                server.client?.sessionActive ?? false
+                                    ? Icons.link
+                                    : Icons.link_off,
                                 color: server.client?.sessionActive ?? false
-                                    ? Colors.yellow
+                                    ? Colors.blue
                                     : Colors.grey,
                               )),
                           IconButton(
                               onPressed: () {
-                                context.read<ServersProvider>().deleteServer(server);
+                                context
+                                    .read<ServersProvider>()
+                                    .deleteServer(server);
                               },
                               icon: const Icon(Icons.delete)),
                         ],

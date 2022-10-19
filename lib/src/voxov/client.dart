@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
@@ -31,7 +32,7 @@ class VClient {
       : host = 'localhost',
         port = 10001,
         credentials = const ChannelCredentials.insecure(),
-        ttl = 600 as Int64;
+        ttl = Int64(600);
 
   Future<void> shutdown() async {
     return await channel.shutdown();
@@ -43,11 +44,10 @@ class VClient {
         CreateSessionRequest()
           ..apiVersion = 1
           ..ttl = ttl,
-        options: CallOptions(compression: const GzipCodec()),
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Caught error: $e');
+        log('Caught error: $e');
       }
       return CreateSessionReply()
         ..apiVersion = 0
@@ -61,11 +61,10 @@ class VClient {
         UpdateSessionRequest()
           ..token = token
           ..ttl = ttl,
-        options: CallOptions(compression: const GzipCodec()),
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Caught error: $e');
+        log('Caught error: $e');
       }
       return UpdateSessionReply()..ok = false;
     }
@@ -75,14 +74,30 @@ class VClient {
     sessionActive = true;
     final r = await createSession();
     token = r.token;
-    if (token == <int>[]) stopSession();
+    if (token.isEmpty) sessionActive = false;
+}
+
+  Future<void> keepSession() async {
     while (sessionActive) {
       await Future.delayed(Duration(seconds: ttl.toInt() ~/ 2));
       if (!(await updateSession()).ok) {
-        stopSession();
+        sessionActive = false;
       }
     }
   }
 
-  void stopSession() => sessionActive = false;
+  void stopSession() async {
+    sessionActive = false;
+    try {
+      await stub.updateSession(
+        UpdateSessionRequest()
+          ..token = token
+          ..ttl = Int64(1),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        log('Caught error: $e');
+      }
+    }
+  }
 }
