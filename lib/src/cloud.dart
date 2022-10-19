@@ -64,6 +64,7 @@ class ServersProvider with ChangeNotifier {
 
   void deleteServer(Server server) async {
     await isar.writeTxn(() async {
+      if (server == _selected) _selected = null;
       bool deleted = await isar.servers.delete(server.id);
       if (deleted) _servers.remove(server);
       notifyListeners();
