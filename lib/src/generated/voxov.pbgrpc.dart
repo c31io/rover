@@ -36,12 +36,34 @@ class VOxOVClient extends $grpc.Client {
       '/voxov.VOxOV/WhoAmI',
       ($0.WhoAmIRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.WhoAmIReply.fromBuffer(value));
-  static final _$createDevice =
-      $grpc.ClientMethod<$0.CreateDeviceRequest, $0.CreateDeviceReply>(
-          '/voxov.VOxOV/CreateDevice',
-          ($0.CreateDeviceRequest value) => value.writeToBuffer(),
+  static final _$createDevice = $grpc.ClientMethod<$0.Device, $0.Device>(
+      '/voxov.VOxOV/CreateDevice',
+      ($0.Device value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Device.fromBuffer(value));
+  static final _$readDevice = $grpc.ClientMethod<$0.Device, $0.Device>(
+      '/voxov.VOxOV/ReadDevice',
+      ($0.Device value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Device.fromBuffer(value));
+  static final _$updateDevice = $grpc.ClientMethod<$0.Device, $0.Device>(
+      '/voxov.VOxOV/UpdateDevice',
+      ($0.Device value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Device.fromBuffer(value));
+  static final _$deleteDevice = $grpc.ClientMethod<$0.Device, $0.Device>(
+      '/voxov.VOxOV/DeleteDevice',
+      ($0.Device value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Device.fromBuffer(value));
+  static final _$listDevice =
+      $grpc.ClientMethod<$0.ListDeviceRequest, $0.ListDeviceReply>(
+          '/voxov.VOxOV/ListDevice',
+          ($0.ListDeviceRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
-              $0.CreateDeviceReply.fromBuffer(value));
+              $0.ListDeviceReply.fromBuffer(value));
+  static final _$authDevice =
+      $grpc.ClientMethod<$0.AuthDeviceRequest, $0.AuthDeviceReply>(
+          '/voxov.VOxOV/AuthDevice',
+          ($0.AuthDeviceRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              $0.AuthDeviceReply.fromBuffer(value));
 
   VOxOVClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -71,10 +93,36 @@ class VOxOVClient extends $grpc.Client {
     return $createUnaryCall(_$whoAmI, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.CreateDeviceReply> createDevice(
-      $0.CreateDeviceRequest request,
+  $grpc.ResponseFuture<$0.Device> createDevice($0.Device request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$createDevice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Device> readDevice($0.Device request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$readDevice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Device> updateDevice($0.Device request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$updateDevice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Device> deleteDevice($0.Device request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$deleteDevice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ListDeviceReply> listDevice(
+      $0.ListDeviceRequest request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$listDevice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.AuthDeviceReply> authDevice(
+      $0.AuthDeviceRequest request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$authDevice, request, options: options);
   }
 }
 
@@ -116,15 +164,48 @@ abstract class VOxOVServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.WhoAmIRequest.fromBuffer(value),
         ($0.WhoAmIReply value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$0.CreateDeviceRequest, $0.CreateDeviceReply>(
-            'CreateDevice',
-            createDevice_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.CreateDeviceRequest.fromBuffer(value),
-            ($0.CreateDeviceReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Device, $0.Device>(
+        'CreateDevice',
+        createDevice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Device.fromBuffer(value),
+        ($0.Device value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Device, $0.Device>(
+        'ReadDevice',
+        readDevice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Device.fromBuffer(value),
+        ($0.Device value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Device, $0.Device>(
+        'UpdateDevice',
+        updateDevice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Device.fromBuffer(value),
+        ($0.Device value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Device, $0.Device>(
+        'DeleteDevice',
+        deleteDevice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Device.fromBuffer(value),
+        ($0.Device value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListDeviceRequest, $0.ListDeviceReply>(
+        'ListDevice',
+        listDevice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ListDeviceRequest.fromBuffer(value),
+        ($0.ListDeviceReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.AuthDeviceRequest, $0.AuthDeviceReply>(
+        'AuthDevice',
+        authDevice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.AuthDeviceRequest.fromBuffer(value),
+        ($0.AuthDeviceReply value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateSessionReply> createSession_Pre($grpc.ServiceCall call,
@@ -147,9 +228,34 @@ abstract class VOxOVServiceBase extends $grpc.Service {
     return whoAmI(call, await request);
   }
 
-  $async.Future<$0.CreateDeviceReply> createDevice_Pre($grpc.ServiceCall call,
-      $async.Future<$0.CreateDeviceRequest> request) async {
+  $async.Future<$0.Device> createDevice_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Device> request) async {
     return createDevice(call, await request);
+  }
+
+  $async.Future<$0.Device> readDevice_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Device> request) async {
+    return readDevice(call, await request);
+  }
+
+  $async.Future<$0.Device> updateDevice_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Device> request) async {
+    return updateDevice(call, await request);
+  }
+
+  $async.Future<$0.Device> deleteDevice_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Device> request) async {
+    return deleteDevice(call, await request);
+  }
+
+  $async.Future<$0.ListDeviceReply> listDevice_Pre($grpc.ServiceCall call,
+      $async.Future<$0.ListDeviceRequest> request) async {
+    return listDevice(call, await request);
+  }
+
+  $async.Future<$0.AuthDeviceReply> authDevice_Pre($grpc.ServiceCall call,
+      $async.Future<$0.AuthDeviceRequest> request) async {
+    return authDevice(call, await request);
   }
 
   $async.Future<$0.CreateSessionReply> createSession(
@@ -160,6 +266,16 @@ abstract class VOxOVServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.AuthenticateRequest request);
   $async.Future<$0.WhoAmIReply> whoAmI(
       $grpc.ServiceCall call, $0.WhoAmIRequest request);
-  $async.Future<$0.CreateDeviceReply> createDevice(
-      $grpc.ServiceCall call, $0.CreateDeviceRequest request);
+  $async.Future<$0.Device> createDevice(
+      $grpc.ServiceCall call, $0.Device request);
+  $async.Future<$0.Device> readDevice(
+      $grpc.ServiceCall call, $0.Device request);
+  $async.Future<$0.Device> updateDevice(
+      $grpc.ServiceCall call, $0.Device request);
+  $async.Future<$0.Device> deleteDevice(
+      $grpc.ServiceCall call, $0.Device request);
+  $async.Future<$0.ListDeviceReply> listDevice(
+      $grpc.ServiceCall call, $0.ListDeviceRequest request);
+  $async.Future<$0.AuthDeviceReply> authDevice(
+      $grpc.ServiceCall call, $0.AuthDeviceRequest request);
 }

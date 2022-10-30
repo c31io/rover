@@ -15,9 +15,7 @@ class Server {
   String? name;
   String? host;
   int? port;
-
-  @ignore
-  Int64? ttl;
+  int? ttl;
 
   @ignore
   ChannelCredentials? credentials;
@@ -77,10 +75,24 @@ class ServersProvider with ChangeNotifier {
       server.host ?? 'localhost',
       server.port ?? 10001,
       server.credentials ?? const ChannelCredentials.insecure(),
-      server.ttl ?? Int64(600),
+      Int64(server.ttl ?? 600),
     );
     await server.client?.startSession();
     notifyListeners();
+    // keepSession
+    () async {
+      while (server.client?.sessionActive ?? false) {
+        await Future.delayed(
+            Duration(seconds: server.client?.ttl.toInt() ?? 0 ~/ 2));
+        if (server.client?.sessionActive ?? false) {
+          var reply = await server.client?.updateSession();
+          if (!(reply?.ok ?? false)) {
+            server.client?.sessionActive = false;
+            notifyListeners();
+          }
+        }
+      }
+    }();
     server.client?.keepSession();
   }
 
@@ -130,6 +142,17 @@ class ServersProvider with ChangeNotifier {
     server.client = null;
     await isar.writeTxn(() async {
       server.port = value;
+      await isar.servers.put(server);
+    });
+    notifyListeners();
+  }
+
+  void updateServerTtl(Server server, int? value) async {
+    if (server.ttl == value) return;
+    await disconnectServer(server);
+    server.client = null;
+    await isar.writeTxn(() async {
+      server.ttl = value;
       await isar.servers.put(server);
     });
     notifyListeners();
@@ -235,6 +258,18 @@ class CloudWidget extends StatelessWidget {
                                         context
                                             .read<ServersProvider>()
                                             .updateServerPort(
+                                                server, int.tryParse(value));
+                                      },
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        labelText: 'TTL',
+                                      ),
+                                      initialValue: server.ttl?.toString(),
+                                      onFieldSubmitted: (value) {
+                                        context
+                                            .read<ServersProvider>()
+                                            .updateServerTtl(
                                                 server, int.tryParse(value));
                                       },
                                     ),

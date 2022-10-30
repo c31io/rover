@@ -59,8 +59,8 @@ class VClient {
     try {
       return await stub.updateSession(
         UpdateSessionRequest()
-          ..token = token
-          ..ttl = ttl,
+          ..ttl = ttl
+          ..token = token,
       );
     } catch (e) {
       if (kDebugMode) {

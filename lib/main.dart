@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rover/src/person.dart';
 import 'src/cloud.dart';
 
 void main() => runApp(MultiProvider(
@@ -33,9 +34,7 @@ class HomeWidget extends StatefulWidget {
 class HomeWidgetState extends State<HomeWidget> {
   static const List<Widget> views = <Widget>[
     CloudWidget(),
-    Text(
-      'Index 1',
-    ),
+    PersonWidget(),
     Text(
       'Index 2',
     ),

@@ -8,9 +8,11 @@ Clone VOxOV right next to this repo.
 
     protoc --dart_out=grpc:lib/src/generated -I ../voxov/api -Iprotos ../voxov/api/voxov.proto
 
+Ignore `protos: warning: directory does not exist.`
+
 ## Generate Isar code
 
-    flutter pub run build_runner build
+    flutter pub run build_runner build --delete-conflicting-outputs
 
 ## Install dependencies
 

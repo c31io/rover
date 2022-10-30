@@ -134,22 +134,22 @@ class CreateSessionReply extends $pb.GeneratedMessage {
 
 class UpdateSessionRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UpdateSessionRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
-    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ttl')
+    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ttl')
+    ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
   UpdateSessionRequest._() : super();
   factory UpdateSessionRequest({
-    $core.List<$core.int>? token,
     $fixnum.Int64? ttl,
+    $core.List<$core.int>? token,
   }) {
     final _result = create();
-    if (token != null) {
-      _result.token = token;
-    }
     if (ttl != null) {
       _result.ttl = ttl;
+    }
+    if (token != null) {
+      _result.token = token;
     }
     return _result;
   }
@@ -175,22 +175,22 @@ class UpdateSessionRequest extends $pb.GeneratedMessage {
   static UpdateSessionRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$core.int> get token => $_getN(0);
+  $fixnum.Int64 get ttl => $_getI64(0);
   @$pb.TagNumber(1)
-  set token($core.List<$core.int> v) { $_setBytes(0, v); }
+  set ttl($fixnum.Int64 v) { $_setInt64(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasToken() => $_has(0);
+  $core.bool hasTtl() => $_has(0);
   @$pb.TagNumber(1)
-  void clearToken() => clearField(1);
+  void clearTtl() => clearField(1);
 
   @$pb.TagNumber(2)
-  $fixnum.Int64 get ttl => $_getI64(1);
+  $core.List<$core.int> get token => $_getN(1);
   @$pb.TagNumber(2)
-  set ttl($fixnum.Int64 v) { $_setInt64(1, v); }
+  set token($core.List<$core.int> v) { $_setBytes(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasTtl() => $_has(1);
+  $core.bool hasToken() => $_has(1);
   @$pb.TagNumber(2)
-  void clearTtl() => clearField(2);
+  void clearToken() => clearField(2);
 }
 
 class UpdateSessionReply extends $pb.GeneratedMessage {
@@ -350,27 +350,27 @@ class AuthenticateReply extends $pb.GeneratedMessage {
 
 class WhoAmIRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'WhoAmIRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tel')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'msg')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tel')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'msg')
+    ..a<$core.List<$core.int>>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
   WhoAmIRequest._() : super();
   factory WhoAmIRequest({
-    $core.List<$core.int>? token,
     $core.String? tel,
     $core.String? msg,
+    $core.List<$core.int>? token,
   }) {
     final _result = create();
-    if (token != null) {
-      _result.token = token;
-    }
     if (tel != null) {
       _result.tel = tel;
     }
     if (msg != null) {
       _result.msg = msg;
+    }
+    if (token != null) {
+      _result.token = token;
     }
     return _result;
   }
@@ -396,31 +396,31 @@ class WhoAmIRequest extends $pb.GeneratedMessage {
   static WhoAmIRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$core.int> get token => $_getN(0);
+  $core.String get tel => $_getSZ(0);
   @$pb.TagNumber(1)
-  set token($core.List<$core.int> v) { $_setBytes(0, v); }
+  set tel($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasToken() => $_has(0);
+  $core.bool hasTel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearToken() => clearField(1);
+  void clearTel() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get tel => $_getSZ(1);
+  $core.String get msg => $_getSZ(1);
   @$pb.TagNumber(2)
-  set tel($core.String v) { $_setString(1, v); }
+  set msg($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasTel() => $_has(1);
+  $core.bool hasMsg() => $_has(1);
   @$pb.TagNumber(2)
-  void clearTel() => clearField(2);
+  void clearMsg() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get msg => $_getSZ(2);
+  $core.List<$core.int> get token => $_getN(2);
   @$pb.TagNumber(3)
-  set msg($core.String v) { $_setString(2, v); }
+  set token($core.List<$core.int> v) { $_setBytes(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasMsg() => $_has(2);
+  $core.bool hasToken() => $_has(2);
   @$pb.TagNumber(3)
-  void clearMsg() => clearField(3);
+  void clearToken() => clearField(3);
 }
 
 class WhoAmIReply extends $pb.GeneratedMessage {
@@ -470,66 +470,86 @@ class WhoAmIReply extends $pb.GeneratedMessage {
   void clearPerson() => clearField(1);
 }
 
-class CreateDeviceRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CreateDeviceRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
+class Device extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Device', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
+    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'did')
     ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dtoken', $pb.PbFieldType.OY)
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'info')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dname')
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dinfo')
+    ..aInt64(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pid')
+    ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created')
+    ..aInt64(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastIn')
+    ..a<$core.List<$core.int>>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
-  CreateDeviceRequest._() : super();
-  factory CreateDeviceRequest({
-    $core.List<$core.int>? token,
+  Device._() : super();
+  factory Device({
+    $fixnum.Int64? did,
     $core.List<$core.int>? dtoken,
-    $core.String? name,
-    $core.String? info,
+    $core.String? dname,
+    $core.String? dinfo,
+    $fixnum.Int64? pid,
+    $fixnum.Int64? created,
+    $fixnum.Int64? lastIn,
+    $core.List<$core.int>? token,
   }) {
     final _result = create();
-    if (token != null) {
-      _result.token = token;
+    if (did != null) {
+      _result.did = did;
     }
     if (dtoken != null) {
       _result.dtoken = dtoken;
     }
-    if (name != null) {
-      _result.name = name;
+    if (dname != null) {
+      _result.dname = dname;
     }
-    if (info != null) {
-      _result.info = info;
+    if (dinfo != null) {
+      _result.dinfo = dinfo;
+    }
+    if (pid != null) {
+      _result.pid = pid;
+    }
+    if (created != null) {
+      _result.created = created;
+    }
+    if (lastIn != null) {
+      _result.lastIn = lastIn;
+    }
+    if (token != null) {
+      _result.token = token;
     }
     return _result;
   }
-  factory CreateDeviceRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CreateDeviceRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Device.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Device.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  CreateDeviceRequest clone() => CreateDeviceRequest()..mergeFromMessage(this);
+  Device clone() => Device()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  CreateDeviceRequest copyWith(void Function(CreateDeviceRequest) updates) => super.copyWith((message) => updates(message as CreateDeviceRequest)) as CreateDeviceRequest; // ignore: deprecated_member_use
+  Device copyWith(void Function(Device) updates) => super.copyWith((message) => updates(message as Device)) as Device; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static CreateDeviceRequest create() => CreateDeviceRequest._();
-  CreateDeviceRequest createEmptyInstance() => create();
-  static $pb.PbList<CreateDeviceRequest> createRepeated() => $pb.PbList<CreateDeviceRequest>();
+  static Device create() => Device._();
+  Device createEmptyInstance() => create();
+  static $pb.PbList<Device> createRepeated() => $pb.PbList<Device>();
   @$core.pragma('dart2js:noInline')
-  static CreateDeviceRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CreateDeviceRequest>(create);
-  static CreateDeviceRequest? _defaultInstance;
+  static Device getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Device>(create);
+  static Device? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$core.int> get token => $_getN(0);
+  $fixnum.Int64 get did => $_getI64(0);
   @$pb.TagNumber(1)
-  set token($core.List<$core.int> v) { $_setBytes(0, v); }
+  set did($fixnum.Int64 v) { $_setInt64(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasToken() => $_has(0);
+  $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearToken() => clearField(1);
+  void clearDid() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.List<$core.int> get dtoken => $_getN(1);
@@ -541,68 +561,267 @@ class CreateDeviceRequest extends $pb.GeneratedMessage {
   void clearDtoken() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
+  $core.String get dname => $_getSZ(2);
   @$pb.TagNumber(3)
-  set name($core.String v) { $_setString(2, v); }
+  set dname($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
+  $core.bool hasDname() => $_has(2);
   @$pb.TagNumber(3)
-  void clearName() => clearField(3);
+  void clearDname() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get info => $_getSZ(3);
+  $core.String get dinfo => $_getSZ(3);
   @$pb.TagNumber(4)
-  set info($core.String v) { $_setString(3, v); }
+  set dinfo($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasInfo() => $_has(3);
+  $core.bool hasDinfo() => $_has(3);
   @$pb.TagNumber(4)
-  void clearInfo() => clearField(4);
+  void clearDinfo() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get pid => $_getI64(4);
+  @$pb.TagNumber(5)
+  set pid($fixnum.Int64 v) { $_setInt64(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasPid() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPid() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get created => $_getI64(5);
+  @$pb.TagNumber(6)
+  set created($fixnum.Int64 v) { $_setInt64(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasCreated() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCreated() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get lastIn => $_getI64(6);
+  @$pb.TagNumber(7)
+  set lastIn($fixnum.Int64 v) { $_setInt64(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasLastIn() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearLastIn() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.List<$core.int> get token => $_getN(7);
+  @$pb.TagNumber(8)
+  set token($core.List<$core.int> v) { $_setBytes(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasToken() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearToken() => clearField(8);
 }
 
-class CreateDeviceReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CreateDeviceReply', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
-    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ok')
+class ListDeviceRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListDeviceRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
-  CreateDeviceReply._() : super();
-  factory CreateDeviceReply({
-    $core.bool? ok,
+  ListDeviceRequest._() : super();
+  factory ListDeviceRequest({
+    $core.List<$core.int>? token,
   }) {
     final _result = create();
-    if (ok != null) {
-      _result.ok = ok;
+    if (token != null) {
+      _result.token = token;
     }
     return _result;
   }
-  factory CreateDeviceReply.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CreateDeviceReply.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory ListDeviceRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ListDeviceRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  CreateDeviceReply clone() => CreateDeviceReply()..mergeFromMessage(this);
+  ListDeviceRequest clone() => ListDeviceRequest()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  CreateDeviceReply copyWith(void Function(CreateDeviceReply) updates) => super.copyWith((message) => updates(message as CreateDeviceReply)) as CreateDeviceReply; // ignore: deprecated_member_use
+  ListDeviceRequest copyWith(void Function(ListDeviceRequest) updates) => super.copyWith((message) => updates(message as ListDeviceRequest)) as ListDeviceRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static CreateDeviceReply create() => CreateDeviceReply._();
-  CreateDeviceReply createEmptyInstance() => create();
-  static $pb.PbList<CreateDeviceReply> createRepeated() => $pb.PbList<CreateDeviceReply>();
+  static ListDeviceRequest create() => ListDeviceRequest._();
+  ListDeviceRequest createEmptyInstance() => create();
+  static $pb.PbList<ListDeviceRequest> createRepeated() => $pb.PbList<ListDeviceRequest>();
   @$core.pragma('dart2js:noInline')
-  static CreateDeviceReply getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CreateDeviceReply>(create);
-  static CreateDeviceReply? _defaultInstance;
+  static ListDeviceRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListDeviceRequest>(create);
+  static ListDeviceRequest? _defaultInstance;
+
+  @$pb.TagNumber(8)
+  $core.List<$core.int> get token => $_getN(0);
+  @$pb.TagNumber(8)
+  set token($core.List<$core.int> v) { $_setBytes(0, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasToken() => $_has(0);
+  @$pb.TagNumber(8)
+  void clearToken() => clearField(8);
+}
+
+class ListDeviceReply extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListDeviceReply', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
+    ..pc<Device>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'devices', $pb.PbFieldType.PM, subBuilder: Device.create)
+    ..hasRequiredFields = false
+  ;
+
+  ListDeviceReply._() : super();
+  factory ListDeviceReply({
+    $core.Iterable<Device>? devices,
+  }) {
+    final _result = create();
+    if (devices != null) {
+      _result.devices.addAll(devices);
+    }
+    return _result;
+  }
+  factory ListDeviceReply.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ListDeviceReply.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ListDeviceReply clone() => ListDeviceReply()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ListDeviceReply copyWith(void Function(ListDeviceReply) updates) => super.copyWith((message) => updates(message as ListDeviceReply)) as ListDeviceReply; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ListDeviceReply create() => ListDeviceReply._();
+  ListDeviceReply createEmptyInstance() => create();
+  static $pb.PbList<ListDeviceReply> createRepeated() => $pb.PbList<ListDeviceReply>();
+  @$core.pragma('dart2js:noInline')
+  static ListDeviceReply getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListDeviceReply>(create);
+  static ListDeviceReply? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get ok => $_getBF(0);
+  $core.List<Device> get devices => $_getList(0);
+}
+
+class AuthDeviceRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthDeviceRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dtoken', $pb.PbFieldType.OY)
+    ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  AuthDeviceRequest._() : super();
+  factory AuthDeviceRequest({
+    $core.List<$core.int>? dtoken,
+    $core.List<$core.int>? token,
+  }) {
+    final _result = create();
+    if (dtoken != null) {
+      _result.dtoken = dtoken;
+    }
+    if (token != null) {
+      _result.token = token;
+    }
+    return _result;
+  }
+  factory AuthDeviceRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AuthDeviceRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AuthDeviceRequest clone() => AuthDeviceRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AuthDeviceRequest copyWith(void Function(AuthDeviceRequest) updates) => super.copyWith((message) => updates(message as AuthDeviceRequest)) as AuthDeviceRequest; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AuthDeviceRequest create() => AuthDeviceRequest._();
+  AuthDeviceRequest createEmptyInstance() => create();
+  static $pb.PbList<AuthDeviceRequest> createRepeated() => $pb.PbList<AuthDeviceRequest>();
+  @$core.pragma('dart2js:noInline')
+  static AuthDeviceRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthDeviceRequest>(create);
+  static AuthDeviceRequest? _defaultInstance;
+
   @$pb.TagNumber(1)
-  set ok($core.bool v) { $_setBool(0, v); }
+  $core.List<$core.int> get dtoken => $_getN(0);
   @$pb.TagNumber(1)
-  $core.bool hasOk() => $_has(0);
+  set dtoken($core.List<$core.int> v) { $_setBytes(0, v); }
   @$pb.TagNumber(1)
-  void clearOk() => clearField(1);
+  $core.bool hasDtoken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDtoken() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get token => $_getN(1);
+  @$pb.TagNumber(2)
+  set token($core.List<$core.int> v) { $_setBytes(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasToken() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearToken() => clearField(2);
+}
+
+class AuthDeviceReply extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthDeviceReply', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
+    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'did')
+    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pid')
+    ..hasRequiredFields = false
+  ;
+
+  AuthDeviceReply._() : super();
+  factory AuthDeviceReply({
+    $fixnum.Int64? did,
+    $fixnum.Int64? pid,
+  }) {
+    final _result = create();
+    if (did != null) {
+      _result.did = did;
+    }
+    if (pid != null) {
+      _result.pid = pid;
+    }
+    return _result;
+  }
+  factory AuthDeviceReply.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AuthDeviceReply.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AuthDeviceReply clone() => AuthDeviceReply()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AuthDeviceReply copyWith(void Function(AuthDeviceReply) updates) => super.copyWith((message) => updates(message as AuthDeviceReply)) as AuthDeviceReply; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AuthDeviceReply create() => AuthDeviceReply._();
+  AuthDeviceReply createEmptyInstance() => create();
+  static $pb.PbList<AuthDeviceReply> createRepeated() => $pb.PbList<AuthDeviceReply>();
+  @$core.pragma('dart2js:noInline')
+  static AuthDeviceReply getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthDeviceReply>(create);
+  static AuthDeviceReply? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get did => $_getI64(0);
+  @$pb.TagNumber(1)
+  set did($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get pid => $_getI64(1);
+  @$pb.TagNumber(2)
+  set pid($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPid() => clearField(2);
 }
 

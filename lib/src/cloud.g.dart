@@ -36,6 +36,11 @@ const ServerSchema = CollectionSchema(
       id: 3,
       name: r'port',
       type: IsarType.long,
+    ),
+    r'ttl': PropertySchema(
+      id: 4,
+      name: r'ttl',
+      type: IsarType.long,
     )
   },
   estimateSize: _serverEstimateSize,
@@ -83,6 +88,7 @@ void _serverSerialize(
   writer.writeLong(offsets[1], object.index);
   writer.writeString(offsets[2], object.name);
   writer.writeLong(offsets[3], object.port);
+  writer.writeLong(offsets[4], object.ttl);
 }
 
 Server _serverDeserialize(
@@ -97,6 +103,7 @@ Server _serverDeserialize(
   object.index = reader.readLongOrNull(offsets[1]);
   object.name = reader.readStringOrNull(offsets[2]);
   object.port = reader.readLongOrNull(offsets[3]);
+  object.ttl = reader.readLongOrNull(offsets[4]);
   return object;
 }
 
@@ -114,6 +121,8 @@ P _serverDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readLongOrNull(offset)) as P;
+    case 4:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -685,6 +694,74 @@ extension ServerQueryFilter on QueryBuilder<Server, Server, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> ttlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'ttl',
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> ttlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'ttl',
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> ttlEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ttl',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> ttlGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ttl',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> ttlLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ttl',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterFilterCondition> ttlBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ttl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension ServerQueryObject on QueryBuilder<Server, Server, QFilterCondition> {}
@@ -737,6 +814,18 @@ extension ServerQuerySortBy on QueryBuilder<Server, Server, QSortBy> {
   QueryBuilder<Server, Server, QAfterSortBy> sortByPortDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'port', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterSortBy> sortByTtl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterSortBy> sortByTtlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.desc);
     });
   }
 }
@@ -801,6 +890,18 @@ extension ServerQuerySortThenBy on QueryBuilder<Server, Server, QSortThenBy> {
       return query.addSortBy(r'port', Sort.desc);
     });
   }
+
+  QueryBuilder<Server, Server, QAfterSortBy> thenByTtl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Server, Server, QAfterSortBy> thenByTtlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.desc);
+    });
+  }
 }
 
 extension ServerQueryWhereDistinct on QueryBuilder<Server, Server, QDistinct> {
@@ -827,6 +928,12 @@ extension ServerQueryWhereDistinct on QueryBuilder<Server, Server, QDistinct> {
   QueryBuilder<Server, Server, QDistinct> distinctByPort() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'port');
+    });
+  }
+
+  QueryBuilder<Server, Server, QDistinct> distinctByTtl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ttl');
     });
   }
 }
@@ -859,6 +966,12 @@ extension ServerQueryProperty on QueryBuilder<Server, Server, QQueryProperty> {
   QueryBuilder<Server, int?, QQueryOperations> portProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'port');
+    });
+  }
+
+  QueryBuilder<Server, int?, QQueryOperations> ttlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ttl');
     });
   }
 }
