@@ -57,6 +57,7 @@ class VClient {
 
   Future<UpdateSessionReply> updateSession() async {
     try {
+      //log("Update session ${DateTime.now()}");
       return await stub.updateSession(
         UpdateSessionRequest()
           ..ttl = ttl
@@ -75,7 +76,7 @@ class VClient {
     final r = await createSession();
     token = r.token;
     if (token.isEmpty) sessionActive = false;
-}
+  }
 
   Future<void> keepSession() async {
     while (sessionActive) {
@@ -98,6 +99,43 @@ class VClient {
       if (kDebugMode) {
         log('Caught error: $e');
       }
+    }
+  }
+
+  Future<List<String>?> authenticate() async {
+    if (!sessionActive) return null;
+    try {
+      var reply = await stub.authenticate(AuthenticateRequest()..token = token);
+      if (reply.tel.isEmpty && reply.tel.isEmpty) {
+        return null;
+      } else {
+        return [reply.tel, reply.msg];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        log('Caught error: $e');
+      }
+      return null;
+    }
+  }
+
+  Future<Int64?> whoAmI(String tel, String msg) async {
+    if (!sessionActive) return null;
+    try {
+      var reply = await stub.whoAmI(WhoAmIRequest()
+        ..tel = tel
+        ..msg = msg
+        ..token = token);
+      if (reply.person == 0) {
+        return null;
+      } else {
+        return reply.person;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        log('Caught error: $e');
+      }
+      return null;
     }
   }
 }

@@ -5,7 +5,8 @@ import 'src/cloud.dart';
 
 void main() => runApp(MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ServersProvider())
+        ChangeNotifierProvider(create: (_) => ServersProvider()),
+        ChangeNotifierProvider(create: (_) => PersonProvider()),
       ],
       child: const MyApp(),
     ));

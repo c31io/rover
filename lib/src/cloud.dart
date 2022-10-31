@@ -83,7 +83,7 @@ class ServersProvider with ChangeNotifier {
     () async {
       while (server.client?.sessionActive ?? false) {
         await Future.delayed(
-            Duration(seconds: server.client?.ttl.toInt() ?? 0 ~/ 2));
+            Duration(seconds: (server.client?.ttl.toInt() ?? 600) ~/ 2));
         if (server.client?.sessionActive ?? false) {
           var reply = await server.client?.updateSession();
           if (!(reply?.ok ?? false)) {
@@ -93,7 +93,6 @@ class ServersProvider with ChangeNotifier {
         }
       }
     }();
-    server.client?.keepSession();
   }
 
   Future<void> disconnectServer(Server server) async {
@@ -167,12 +166,12 @@ class CloudWidget extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           leading:
-              context.read<ServersProvider>().selected?.client?.sessionActive ??
+              context.watch<ServersProvider>().selected?.client?.sessionActive ??
                       false
                   ? const Icon(Icons.cloud)
                   : const Icon(Icons.cloud_off),
           title: context
-                      .read<ServersProvider>()
+                      .watch<ServersProvider>()
                       .selected
                       ?.client
                       ?.sessionActive ??
