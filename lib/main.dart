@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rover/src/person.dart';
+import 'package:isar/isar.dart';
 import 'src/cloud.dart';
 
-void main() => runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ServersProvider()),
-        ChangeNotifierProvider(create: (_) => PersonProvider()),
-      ],
-      child: const MyApp(),
-    ));
+void main() {
+  late Isar isar;
+  () async {
+    isar = await Isar.open([ServerSchema, PersonSchema]);
+  }();
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ServersProvider(isar)),
+      ChangeNotifierProvider(create: (_) => PersonProvider(isar)),
+    ],
+    child: const MyApp(),
+  ));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

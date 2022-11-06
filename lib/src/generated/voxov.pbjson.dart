@@ -153,3 +153,22 @@ const AuthDeviceReply$json = const {
 
 /// Descriptor for `AuthDeviceReply`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List authDeviceReplyDescriptor = $convert.base64Decode('Cg9BdXRoRGV2aWNlUmVwbHkSEAoDZGlkGAEgASgDUgNkaWQSEAoDcGlkGAIgASgDUgNwaWQ=');
+@$core.Deprecated('Use personDescriptor instead')
+const Person$json = const {
+  '1': 'Person',
+  '2': const [
+    const {'1': 'pid', '3': 1, '4': 1, '5': 3, '10': 'pid'},
+    const {'1': 'hid', '3': 2, '4': 1, '5': 3, '10': 'hid'},
+    const {'1': 'balance', '3': 3, '4': 1, '5': 3, '10': 'balance'},
+    const {'1': 'phone', '3': 4, '4': 1, '5': 9, '10': 'phone'},
+    const {'1': 'pname', '3': 5, '4': 1, '5': 9, '10': 'pname'},
+    const {'1': 'id_doc', '3': 6, '4': 1, '5': 9, '10': 'idDoc'},
+    const {'1': 'dlimit', '3': 7, '4': 1, '5': 5, '10': 'dlimit'},
+    const {'1': 'created', '3': 8, '4': 1, '5': 3, '10': 'created'},
+    const {'1': 'last_in', '3': 9, '4': 1, '5': 3, '10': 'lastIn'},
+    const {'1': 'token', '3': 10, '4': 1, '5': 12, '10': 'token'},
+  ],
+};
+
+/// Descriptor for `Person`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List personDescriptor = $convert.base64Decode('CgZQZXJzb24SEAoDcGlkGAEgASgDUgNwaWQSEAoDaGlkGAIgASgDUgNoaWQSGAoHYmFsYW5jZRgDIAEoA1IHYmFsYW5jZRIUCgVwaG9uZRgEIAEoCVIFcGhvbmUSFAoFcG5hbWUYBSABKAlSBXBuYW1lEhUKBmlkX2RvYxgGIAEoCVIFaWREb2MSFgoGZGxpbWl0GAcgASgFUgZkbGltaXQSGAoHY3JlYXRlZBgIIAEoA1IHY3JlYXRlZBIXCgdsYXN0X2luGAkgASgDUgZsYXN0SW4SFAoFdG9rZW4YCiABKAxSBXRva2Vu');

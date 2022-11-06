@@ -138,4 +138,42 @@ class VClient {
       return null;
     }
   }
+
+  Future<Person?> readPerson(Int64 pid) async {
+    if (!sessionActive) return null;
+    try {
+      var reply = await stub.readPerson(Person()
+        ..pid = pid
+        ..token = token);
+      if (reply.pid == 0) {
+        return null;
+      } else {
+        return reply;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        log('Caught error: $e');
+      }
+      return null;
+    }
+  }
+
+  Future<Device?> createDevice(String dName, dInfo) async {
+    if (!sessionActive) return null;
+    try {
+      var reply = await stub.createDevice(Device()
+        ..dname = dName
+        ..dinfo = dInfo);
+      if (reply.did == 0) {
+        return null;
+      } else {
+        return reply;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        log('Caught error: $e');
+      }
+      return null;
+    }
+  }
 }

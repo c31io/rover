@@ -825,3 +825,176 @@ class AuthDeviceReply extends $pb.GeneratedMessage {
   void clearPid() => clearField(2);
 }
 
+class Person extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Person', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'voxov'), createEmptyInstance: create)
+    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pid')
+    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hid')
+    ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'balance')
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'phone')
+    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pname')
+    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'idDoc')
+    ..a<$core.int>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dlimit', $pb.PbFieldType.O3)
+    ..aInt64(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created')
+    ..aInt64(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastIn')
+    ..a<$core.List<$core.int>>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  Person._() : super();
+  factory Person({
+    $fixnum.Int64? pid,
+    $fixnum.Int64? hid,
+    $fixnum.Int64? balance,
+    $core.String? phone,
+    $core.String? pname,
+    $core.String? idDoc,
+    $core.int? dlimit,
+    $fixnum.Int64? created,
+    $fixnum.Int64? lastIn,
+    $core.List<$core.int>? token,
+  }) {
+    final _result = create();
+    if (pid != null) {
+      _result.pid = pid;
+    }
+    if (hid != null) {
+      _result.hid = hid;
+    }
+    if (balance != null) {
+      _result.balance = balance;
+    }
+    if (phone != null) {
+      _result.phone = phone;
+    }
+    if (pname != null) {
+      _result.pname = pname;
+    }
+    if (idDoc != null) {
+      _result.idDoc = idDoc;
+    }
+    if (dlimit != null) {
+      _result.dlimit = dlimit;
+    }
+    if (created != null) {
+      _result.created = created;
+    }
+    if (lastIn != null) {
+      _result.lastIn = lastIn;
+    }
+    if (token != null) {
+      _result.token = token;
+    }
+    return _result;
+  }
+  factory Person.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Person.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Person clone() => Person()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Person copyWith(void Function(Person) updates) => super.copyWith((message) => updates(message as Person)) as Person; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Person create() => Person._();
+  Person createEmptyInstance() => create();
+  static $pb.PbList<Person> createRepeated() => $pb.PbList<Person>();
+  @$core.pragma('dart2js:noInline')
+  static Person getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Person>(create);
+  static Person? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get pid => $_getI64(0);
+  @$pb.TagNumber(1)
+  set pid($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get hid => $_getI64(1);
+  @$pb.TagNumber(2)
+  set hid($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasHid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHid() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get balance => $_getI64(2);
+  @$pb.TagNumber(3)
+  set balance($fixnum.Int64 v) { $_setInt64(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasBalance() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBalance() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get phone => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set phone($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasPhone() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPhone() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get pname => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set pname($core.String v) { $_setString(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasPname() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPname() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get idDoc => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set idDoc($core.String v) { $_setString(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasIdDoc() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearIdDoc() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get dlimit => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set dlimit($core.int v) { $_setSignedInt32(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasDlimit() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDlimit() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $fixnum.Int64 get created => $_getI64(7);
+  @$pb.TagNumber(8)
+  set created($fixnum.Int64 v) { $_setInt64(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasCreated() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCreated() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get lastIn => $_getI64(8);
+  @$pb.TagNumber(9)
+  set lastIn($fixnum.Int64 v) { $_setInt64(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasLastIn() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearLastIn() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.List<$core.int> get token => $_getN(9);
+  @$pb.TagNumber(10)
+  set token($core.List<$core.int> v) { $_setBytes(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasToken() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearToken() => clearField(10);
+}
+

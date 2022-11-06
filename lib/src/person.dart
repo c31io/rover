@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:developer';
 //import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -13,35 +14,35 @@ class Person {
   Id id = Isar.autoIncrement;
   late int serverId;
   late List<int> pid;
-  List<int>? hid;
+  late List<int> hid;
   late List<int> balance;
   late String phone;
-  String? pName;
-  String? idDoc;
+  late String pName;
+  late String idDoc;
   late int dLimit;
   late List<int> created;
   late List<int> lastIn;
   @ignore
   late List<Device> devices;
-  late List<int>? did;
+  late List<int> did;
 }
 
 @collection
 class Device {
   Id id = Isar.autoIncrement;
   late int serverId;
-  late List<int>? did;
+  late List<int> did;
   @ignore
-  late List<int>? dToken;
-  String? dName;
-  String? dInfo;
-  late List<int>? pid;
-  late List<int>? created;
-  late List<int>? lastIn;
+  late List<int> dToken;
+  late String dName;
+  late String dInfo;
+  late List<int> pid;
+  late List<int> created;
+  late List<int> lastIn;
 }
 
 class PersonProvider with ChangeNotifier {
-  PersonProvider() {
+  PersonProvider(this.isar) {
     init();
   }
 
@@ -53,8 +54,6 @@ class PersonProvider with ChangeNotifier {
   late Isar isar;
 
   void init() async {
-    isar = await Isar.open([PersonSchema]);
-
     await isar.txn(() async {
       final personsCollection = isar.persons;
       _persons = await personsCollection.where().findAll();
@@ -63,7 +62,12 @@ class PersonProvider with ChangeNotifier {
   }
 
   void addPerson(Person person) async {
-    // TODO
+    await isar.writeTxn(() async {
+      await isar.persons.put(person);
+    });
+    _persons.add(person);
+    notifyListeners();
+    log('add person');
   }
 }
 
@@ -151,9 +155,36 @@ class PersonWidget extends StatelessWidget {
                                   .selected!
                                   .client!
                                   .whoAmI(telMsg[0], telMsg[1]);
+                              Person? me;
+                              log(person.toString());
                               if (person != null) {
-                                // TODO get person
-                                // TODO create device
+                                if (!context.mounted) return;
+                                var protoPerson = await context
+                                    .read<ServersProvider>()
+                                    .selected!
+                                    .client!
+                                    .readPerson(person);
+                                if (protoPerson != null) {
+                                  me = Person();
+                                  me.pid = protoPerson.pid.toBytes();
+                                  me.hid = protoPerson.hid.toBytes();
+                                  me.balance = protoPerson.balance.toBytes();
+                                  me.phone = protoPerson.phone;
+                                  me.pName = protoPerson.pname;
+                                  me.idDoc = protoPerson.idDoc;
+                                  me.dLimit = protoPerson.dlimit;
+                                  me.created = protoPerson.created.toBytes();
+                                  me.lastIn = protoPerson.lastIn.toBytes();
+                                  if (!context.mounted) return;
+                                  me.serverId = context
+                                      .read<ServersProvider>()
+                                      .selected!
+                                      .id;
+                                  // TODO create device
+                                  me.did = <int>[1, 2, 3];
+                                  if (!context.mounted) return;
+                                  context.read<PersonProvider>().addPerson(me);
+                                }
                               }
                             }();
                             Navigator.pop(context, 'Sent');
@@ -186,7 +217,14 @@ class PersonWidget extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
-      body: Container(),
+      body: Column(
+        children: context
+            .watch<PersonProvider>()
+            .persons
+            .map((person) => ListTile(
+                title: Text(person.pName.isEmpty ? 'Anonymous' : person.pName)))
+            .toList(),
+      ),
     );
   }
 }

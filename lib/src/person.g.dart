@@ -95,31 +95,11 @@ int _personEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.balance.length * 8;
   bytesCount += 3 + object.created.length * 8;
-  {
-    final value = object.did;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
-  {
-    final value = object.hid;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
-  {
-    final value = object.idDoc;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.did.length * 8;
+  bytesCount += 3 + object.hid.length * 8;
+  bytesCount += 3 + object.idDoc.length * 3;
   bytesCount += 3 + object.lastIn.length * 8;
-  {
-    final value = object.pName;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.pName.length * 3;
   bytesCount += 3 + object.phone.length * 3;
   bytesCount += 3 + object.pid.length * 8;
   return bytesCount;
@@ -154,12 +134,12 @@ Person _personDeserialize(
   object.balance = reader.readLongList(offsets[0]) ?? [];
   object.created = reader.readLongList(offsets[1]) ?? [];
   object.dLimit = reader.readLong(offsets[2]);
-  object.did = reader.readLongList(offsets[3]);
-  object.hid = reader.readLongList(offsets[4]);
+  object.did = reader.readLongList(offsets[3]) ?? [];
+  object.hid = reader.readLongList(offsets[4]) ?? [];
   object.id = id;
-  object.idDoc = reader.readStringOrNull(offsets[5]);
+  object.idDoc = reader.readString(offsets[5]);
   object.lastIn = reader.readLongList(offsets[6]) ?? [];
-  object.pName = reader.readStringOrNull(offsets[7]);
+  object.pName = reader.readString(offsets[7]);
   object.phone = reader.readString(offsets[8]);
   object.pid = reader.readLongList(offsets[9]) ?? [];
   object.serverId = reader.readLong(offsets[10]);
@@ -180,15 +160,15 @@ P _personDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 4:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readLongList(offset) ?? []) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 8:
       return (reader.readString(offset)) as P;
     case 9:
@@ -614,22 +594,6 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Person, Person, QAfterFilterCondition> didIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'did',
-      ));
-    });
-  }
-
-  QueryBuilder<Person, Person, QAfterFilterCondition> didIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'did',
-      ));
-    });
-  }
-
   QueryBuilder<Person, Person, QAfterFilterCondition> didElementEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -764,22 +728,6 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
         upper,
         includeUpper,
       );
-    });
-  }
-
-  QueryBuilder<Person, Person, QAfterFilterCondition> hidIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'hid',
-      ));
-    });
-  }
-
-  QueryBuilder<Person, Person, QAfterFilterCondition> hidIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'hid',
-      ));
     });
   }
 
@@ -972,24 +920,8 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Person, Person, QAfterFilterCondition> idDocIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'idDoc',
-      ));
-    });
-  }
-
-  QueryBuilder<Person, Person, QAfterFilterCondition> idDocIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'idDoc',
-      ));
-    });
-  }
-
   QueryBuilder<Person, Person, QAfterFilterCondition> idDocEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1002,7 +934,7 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
   }
 
   QueryBuilder<Person, Person, QAfterFilterCondition> idDocGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1017,7 +949,7 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
   }
 
   QueryBuilder<Person, Person, QAfterFilterCondition> idDocLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1032,8 +964,8 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
   }
 
   QueryBuilder<Person, Person, QAfterFilterCondition> idDocBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1255,24 +1187,8 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Person, Person, QAfterFilterCondition> pNameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'pName',
-      ));
-    });
-  }
-
-  QueryBuilder<Person, Person, QAfterFilterCondition> pNameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'pName',
-      ));
-    });
-  }
-
   QueryBuilder<Person, Person, QAfterFilterCondition> pNameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1285,7 +1201,7 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
   }
 
   QueryBuilder<Person, Person, QAfterFilterCondition> pNameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1300,7 +1216,7 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
   }
 
   QueryBuilder<Person, Person, QAfterFilterCondition> pNameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1315,8 +1231,8 @@ extension PersonQueryFilter on QueryBuilder<Person, Person, QFilterCondition> {
   }
 
   QueryBuilder<Person, Person, QAfterFilterCondition> pNameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1958,19 +1874,19 @@ extension PersonQueryProperty on QueryBuilder<Person, Person, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Person, List<int>?, QQueryOperations> didProperty() {
+  QueryBuilder<Person, List<int>, QQueryOperations> didProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'did');
     });
   }
 
-  QueryBuilder<Person, List<int>?, QQueryOperations> hidProperty() {
+  QueryBuilder<Person, List<int>, QQueryOperations> hidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hid');
     });
   }
 
-  QueryBuilder<Person, String?, QQueryOperations> idDocProperty() {
+  QueryBuilder<Person, String, QQueryOperations> idDocProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'idDoc');
     });
@@ -1982,7 +1898,7 @@ extension PersonQueryProperty on QueryBuilder<Person, Person, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Person, String?, QQueryOperations> pNameProperty() {
+  QueryBuilder<Person, String, QQueryOperations> pNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pName');
     });
@@ -2074,42 +1990,12 @@ int _deviceEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.created;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
-  {
-    final value = object.dInfo;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.dName;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.did;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
-  {
-    final value = object.lastIn;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
-  {
-    final value = object.pid;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
+  bytesCount += 3 + object.created.length * 8;
+  bytesCount += 3 + object.dInfo.length * 3;
+  bytesCount += 3 + object.dName.length * 3;
+  bytesCount += 3 + object.did.length * 8;
+  bytesCount += 3 + object.lastIn.length * 8;
+  bytesCount += 3 + object.pid.length * 8;
   return bytesCount;
 }
 
@@ -2135,13 +2021,13 @@ Device _deviceDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Device();
-  object.created = reader.readLongList(offsets[0]);
-  object.dInfo = reader.readStringOrNull(offsets[1]);
-  object.dName = reader.readStringOrNull(offsets[2]);
-  object.did = reader.readLongList(offsets[3]);
+  object.created = reader.readLongList(offsets[0]) ?? [];
+  object.dInfo = reader.readString(offsets[1]);
+  object.dName = reader.readString(offsets[2]);
+  object.did = reader.readLongList(offsets[3]) ?? [];
   object.id = id;
-  object.lastIn = reader.readLongList(offsets[4]);
-  object.pid = reader.readLongList(offsets[5]);
+  object.lastIn = reader.readLongList(offsets[4]) ?? [];
+  object.pid = reader.readLongList(offsets[5]) ?? [];
   object.serverId = reader.readLong(offsets[6]);
   return object;
 }
@@ -2154,17 +2040,17 @@ P _deviceDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 4:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 5:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 6:
       return (reader.readLong(offset)) as P;
     default:
@@ -2260,22 +2146,6 @@ extension DeviceQueryWhere on QueryBuilder<Device, Device, QWhereClause> {
 }
 
 extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
-  QueryBuilder<Device, Device, QAfterFilterCondition> createdIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'created',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> createdIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'created',
-      ));
-    });
-  }
-
   QueryBuilder<Device, Device, QAfterFilterCondition> createdElementEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -2413,24 +2283,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> dInfoIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'dInfo',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> dInfoIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'dInfo',
-      ));
-    });
-  }
-
   QueryBuilder<Device, Device, QAfterFilterCondition> dInfoEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -2443,7 +2297,7 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> dInfoGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2458,7 +2312,7 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> dInfoLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2473,8 +2327,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> dInfoBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2559,24 +2413,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> dNameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'dName',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> dNameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'dName',
-      ));
-    });
-  }
-
   QueryBuilder<Device, Device, QAfterFilterCondition> dNameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -2589,7 +2427,7 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> dNameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2604,7 +2442,7 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> dNameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2619,8 +2457,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> dNameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2701,22 +2539,6 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'dName',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> didIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'did',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> didIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'did',
       ));
     });
   }
@@ -2910,22 +2732,6 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> lastInIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'lastIn',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> lastInIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'lastIn',
-      ));
-    });
-  }
-
   QueryBuilder<Device, Device, QAfterFilterCondition> lastInElementEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -3060,22 +2866,6 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
         upper,
         includeUpper,
       );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> pidIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'pid',
-      ));
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> pidIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'pid',
-      ));
     });
   }
 
@@ -3415,37 +3205,37 @@ extension DeviceQueryProperty on QueryBuilder<Device, Device, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Device, List<int>?, QQueryOperations> createdProperty() {
+  QueryBuilder<Device, List<int>, QQueryOperations> createdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'created');
     });
   }
 
-  QueryBuilder<Device, String?, QQueryOperations> dInfoProperty() {
+  QueryBuilder<Device, String, QQueryOperations> dInfoProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dInfo');
     });
   }
 
-  QueryBuilder<Device, String?, QQueryOperations> dNameProperty() {
+  QueryBuilder<Device, String, QQueryOperations> dNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dName');
     });
   }
 
-  QueryBuilder<Device, List<int>?, QQueryOperations> didProperty() {
+  QueryBuilder<Device, List<int>, QQueryOperations> didProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'did');
     });
   }
 
-  QueryBuilder<Device, List<int>?, QQueryOperations> lastInProperty() {
+  QueryBuilder<Device, List<int>, QQueryOperations> lastInProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastIn');
     });
   }
 
-  QueryBuilder<Device, List<int>?, QQueryOperations> pidProperty() {
+  QueryBuilder<Device, List<int>, QQueryOperations> pidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pid');
     });

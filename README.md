@@ -2,6 +2,10 @@
 
 Main VOxOV Frontend
 
+## Flutter SDK
+
+Install from GitHub master branch.
+
 ## Generate gRPC code
 
 Clone VOxOV right next to this repo.
@@ -14,7 +18,7 @@ Ignore `protos: warning: directory does not exist.`
 
     flutter pub run build_runner build --delete-conflicting-outputs
 
-## Install dependencies
+## Install dependencies on Linux
 
     sudo apt install libsecret-1-dev libjsoncpp-dev libsecret-1-0 libgtkd-3-dev clang ninja-build cmake
 

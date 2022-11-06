@@ -28,7 +28,7 @@ class Server {
 }
 
 class ServersProvider with ChangeNotifier {
-  ServersProvider() {
+  ServersProvider(this.isar) {
     init();
   }
 
@@ -40,8 +40,6 @@ class ServersProvider with ChangeNotifier {
   late Isar isar;
 
   void init() async {
-    isar = await Isar.open([ServerSchema]);
-
     await isar.txn(() async {
       final serversCollection = isar.servers;
       _servers = await serversCollection.where().findAll();

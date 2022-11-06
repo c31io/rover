@@ -64,6 +64,10 @@ class VOxOVClient extends $grpc.Client {
           ($0.AuthDeviceRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $0.AuthDeviceReply.fromBuffer(value));
+  static final _$readPerson = $grpc.ClientMethod<$0.Person, $0.Person>(
+      '/voxov.VOxOV/ReadPerson',
+      ($0.Person value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Person.fromBuffer(value));
 
   VOxOVClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -123,6 +127,11 @@ class VOxOVClient extends $grpc.Client {
       $0.AuthDeviceRequest request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$authDevice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Person> readPerson($0.Person request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$readPerson, request, options: options);
   }
 }
 
@@ -206,6 +215,13 @@ abstract class VOxOVServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.AuthDeviceRequest.fromBuffer(value),
         ($0.AuthDeviceReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Person, $0.Person>(
+        'ReadPerson',
+        readPerson_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Person.fromBuffer(value),
+        ($0.Person value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateSessionReply> createSession_Pre($grpc.ServiceCall call,
@@ -258,6 +274,11 @@ abstract class VOxOVServiceBase extends $grpc.Service {
     return authDevice(call, await request);
   }
 
+  $async.Future<$0.Person> readPerson_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Person> request) async {
+    return readPerson(call, await request);
+  }
+
   $async.Future<$0.CreateSessionReply> createSession(
       $grpc.ServiceCall call, $0.CreateSessionRequest request);
   $async.Future<$0.UpdateSessionReply> updateSession(
@@ -278,4 +299,6 @@ abstract class VOxOVServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.ListDeviceRequest request);
   $async.Future<$0.AuthDeviceReply> authDevice(
       $grpc.ServiceCall call, $0.AuthDeviceRequest request);
+  $async.Future<$0.Person> readPerson(
+      $grpc.ServiceCall call, $0.Person request);
 }
