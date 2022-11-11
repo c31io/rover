@@ -1,9 +1,11 @@
 import 'dart:core';
 import 'dart:developer';
-//import 'package:fixnum/fixnum.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:rover/src/voxov/client.dart';
+import 'generated/voxov.pbgrpc.dart' as voxov;
 
 import 'cloud.dart';
 
@@ -25,6 +27,23 @@ class Person {
   @ignore
   late List<Device> devices;
   late List<int> did;
+}
+
+Person makePerson(voxov.Person vp, int serverId) {
+  var ret = Person();
+  ret.serverId = serverId;
+  ret.pid = vp.pid.toBytes();
+  ret.hid = vp.hid.toBytes();
+  ret.balance = vp.balance.toBytes();
+  ret.phone = vp.phone;
+  ret.pName = vp.pname;
+  ret.idDoc = vp.idDoc;
+  ret.dLimit = vp.dlimit;
+  ret.created = vp.created.toBytes();
+  ret.lastIn = vp.lastIn.toBytes();
+  ret.devices = [];
+  ret.did = [];
+  return ret;
 }
 
 @collection
@@ -103,116 +122,22 @@ class PersonWidget extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           if (context.read<ServersProvider>().selected?.client?.sessionActive ??
               false) {
-            try {
-              var telMsgF = context
-                  .read<ServersProvider>()
-                  .selected!
-                  .client!
-                  .authenticate();
-              () async {
-                var telMsg = await telMsgF;
-                if (telMsg == null) {
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Authentication failed'),
-                      content: const Text('Please try again later.'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, 'OK');
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  showDialog<String>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Authenticate via SMS'),
-                      content: Text('Send ${telMsg[1]} to ${telMsg[0]}'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            () async {
-                              var person = await context
-                                  .read<ServersProvider>()
-                                  .selected!
-                                  .client!
-                                  .whoAmI(telMsg[0], telMsg[1]);
-                              Person? me;
-                              log(person.toString());
-                              if (person != null) {
-                                if (!context.mounted) return;
-                                var protoPerson = await context
-                                    .read<ServersProvider>()
-                                    .selected!
-                                    .client!
-                                    .readPerson(person);
-                                if (protoPerson != null) {
-                                  me = Person();
-                                  me.pid = protoPerson.pid.toBytes();
-                                  me.hid = protoPerson.hid.toBytes();
-                                  me.balance = protoPerson.balance.toBytes();
-                                  me.phone = protoPerson.phone;
-                                  me.pName = protoPerson.pname;
-                                  me.idDoc = protoPerson.idDoc;
-                                  me.dLimit = protoPerson.dlimit;
-                                  me.created = protoPerson.created.toBytes();
-                                  me.lastIn = protoPerson.lastIn.toBytes();
-                                  if (!context.mounted) return;
-                                  me.serverId = context
-                                      .read<ServersProvider>()
-                                      .selected!
-                                      .id;
-                                  // TODO create device
-                                  me.did = <int>[1, 2, 3];
-                                  if (!context.mounted) return;
-                                  context.read<PersonProvider>().addPerson(me);
-                                }
-                              }
-                            }();
-                            Navigator.pop(context, 'Sent');
-                          },
-                          child: const Text('Sent'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              }();
-            } catch (e) {
-              log('Caught error: $e');
+            final selectedServer = context.read<ServersProvider>().selected!;
+            final client = selectedServer.client!;
+            List<String>? telMsg;
+            () async {
+              telMsg = await client.authenticate();
+            }();
+            if (telMsg == null) {
+              showAuthFailedAlert(context);
+            } else {
+              showAuthDialog(context, selectedServer, client, telMsg!);
             }
           } else {
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text('Disconnected'),
-                content: const Text('Please return to Cloud and reconnect.'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            );
+            showConnFailedAlert(context);
           }
         },
         child: const Icon(Icons.add),
@@ -227,4 +152,85 @@ class PersonWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+void showAuthFailedAlert(BuildContext context) {
+  showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: const Text('Authentication failed'),
+      content: const Text('Please try again later.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, 'OK');
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
+void showAuthDialog(BuildContext context, Server selectedServer, VClient client, List<String> telMsg) {
+  showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) => AlertDialog(
+      title: const Text('Authenticate via SMS'),
+      content: Text('Send ${telMsg[1]} to ${telMsg[0]}'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, 'Cancel');
+          },
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Int64? person;
+                () async {
+              person = await client.whoAmI(telMsg[0], telMsg[1]);
+            }();
+            Person? me;
+            log(person.toString());
+            if (person != null) {
+              voxov.Person? protoPerson;
+                  () async {
+                protoPerson = await client.readPerson(person!);
+              }();
+              if (protoPerson != null) {
+                me = makePerson(protoPerson!, selectedServer.id);
+                // TODO create device
+                me.did = <int>[1, 2, 3];
+                if (!context.mounted) return;
+                context.read<PersonProvider>().addPerson(me);
+              }
+            }
+            Navigator.pop(context, 'Sent');
+          },
+          child: const Text('Sent'),
+        ),
+      ],
+    ),
+  );
+}
+
+void showConnFailedAlert(BuildContext context) {
+  showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: const Text('Disconnected'),
+      content: const Text('Please return to Cloud and reconnect.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
 }
