@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:grpc/grpc.dart';
 import 'package:isar/isar.dart';
+import 'package:rover/src/person.dart';
 import 'package:rover/src/voxov/client.dart';
 
 part 'cloud.g.dart';
@@ -57,7 +58,11 @@ class ServersProvider with ChangeNotifier {
 
   void deleteServer(Server server) async {
     await isar.writeTxn(() async {
-      // delete person
+      // delete dTokens
+      // delete persons
+      final persons = await isar.persons.filter().serverIdEqualTo(server.id).findAll();
+      final personIds = persons.map((p) => p.id).toList();
+      isar.servers.deleteAll(personIds);
       // delete server
       if (server == _selected) _selected = null;
       bool deleted = await isar.servers.delete(server.id);

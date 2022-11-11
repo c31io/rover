@@ -72,7 +72,8 @@ class PersonProvider with ChangeNotifier {
   Person? _selected;
   Person? get selected => _selected;
 
-  List<Person> personOnServer(int serverId) => _persons.where((p) => p.serverId==serverId).toList();
+  List<Person> personOnServer(int serverId) =>
+      _persons.where((p) => p.serverId == serverId).toList();
 
   late Isar isar;
 
@@ -100,52 +101,8 @@ class PersonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Icon(Icons.people),
-        title: Text(
-          context.watch<ServersProvider>().selected == null
-              ? "Server not selected"
-              : context
-                          .watch<ServersProvider>()
-                          .selected
-                          ?.client
-                          ?.sessionActive ??
-                      false
-                  ? context.watch<ServersProvider>().selected?.name ?? "Unnamed"
-                  : "Server disconnected",
-          style: context.watch<ServersProvider>().selected == null
-              ? const TextStyle(color: Colors.redAccent)
-              : context
-                          .watch<ServersProvider>()
-                          .selected
-                          ?.client
-                          ?.sessionActive ??
-                      false
-                  ? null
-                  : const TextStyle(color: Colors.redAccent),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (context.read<ServersProvider>().selected?.client?.sessionActive ??
-              false) {
-            final selectedServer = context.read<ServersProvider>().selected!;
-            final client = selectedServer.client!;
-            List<String>? telMsg;
-            () async {
-              telMsg = await client.authenticate();
-            }();
-            if (telMsg == null) {
-              showAuthFailedAlert(context);
-            } else {
-              showAuthDialog(context, selectedServer, client, telMsg!);
-            }
-          } else {
-            showConnFailedAlert(context);
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      appBar: buildAppBar(context),
+      floatingActionButton: const PersonFloatingActionButton(),
       body: Column(
         children: context
             .watch<PersonProvider>()
@@ -153,24 +110,84 @@ class PersonWidget extends StatelessWidget {
             .map((person) => ListTile(
                   title:
                       Text(person.pName.isEmpty ? 'Anonymous' : person.pName),
-                  subtitle: Text(
-                      "${Int64.fromBytes(person.pid)} @ ${context.read<ServersProvider>().servers.singleWhere((s) => s.id == person.serverId).host}"),
+                  subtitle: Text(// pid @ host
+                      "${Int64.fromBytes(person.pid)} @ ${context.read<ServersProvider>().servers.singleWhere((s) => s.id == person.serverId).host ?? "localhost"}"),
                 ))
             .toList(),
       ),
     );
   }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      leading: const Icon(Icons.people),
+      title: Text(
+        context.watch<ServersProvider>().selected == null
+            ? "Server not selected"
+            : context
+                        .watch<ServersProvider>()
+                        .selected
+                        ?.client
+                        ?.sessionActive ??
+                    false
+                ? context.watch<ServersProvider>().selected?.name ?? "Unnamed"
+                : "Server disconnected",
+        style: context.watch<ServersProvider>().selected == null
+            ? const TextStyle(color: Colors.redAccent)
+            : context
+                        .watch<ServersProvider>()
+                        .selected
+                        ?.client
+                        ?.sessionActive ??
+                    false
+                ? null
+                : const TextStyle(color: Colors.redAccent),
+      ),
+    );
+  }
 }
 
-void showAuthFailedAlert(BuildContext context) {
-  showDialog<String>(
+class PersonFloatingActionButton extends StatelessWidget {
+  const PersonFloatingActionButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        if (context.read<ServersProvider>().selected?.client?.sessionActive ??
+            false) {
+          final selectedServer = context.read<ServersProvider>().selected!;
+          final client = selectedServer.client!;
+          () async {
+            final telMsg = await client.authenticate();
+            // Stupid linter
+            // ignore: use_build_context_synchronously
+            if (!context.mounted) return;
+            if (telMsg == null) {
+              await showAuthFailedAlert(context);
+            } else {
+              await showAuthDialog(context, selectedServer, client, telMsg);
+            }
+          }();
+        } else {
+          showConnFailedAlert(context);
+        }
+      },
+      child: const Icon(Icons.add),
+    );
+  }
+}
+
+Future<void> showAuthFailedAlert(BuildContext context) async {
+  await showDialog<String>(
     context: context,
     builder: (BuildContext context) => AlertDialog(
       title: const Text('Authentication failed'),
       content: const Text('Please try again later.'),
       actions: <Widget>[
         TextButton(
-          onPressed: () {
+          onPressed: () async {
+            if (!context.mounted) return;
             Navigator.pop(context, 'OK');
           },
           child: const Text('OK'),
@@ -180,9 +197,9 @@ void showAuthFailedAlert(BuildContext context) {
   );
 }
 
-void showAuthDialog(BuildContext context, Server selectedServer, VClient client,
-    List<String> telMsg) {
-  showDialog<String>(
+Future<void> showAuthDialog(BuildContext context, Server selectedServer,
+    VClient client, List<String> telMsg) async {
+  await showDialog<String>(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) => AlertDialog(
@@ -190,7 +207,8 @@ void showAuthDialog(BuildContext context, Server selectedServer, VClient client,
       content: Text('Send ${telMsg[1]} to ${telMsg[0]}'),
       actions: <Widget>[
         TextButton(
-          onPressed: () {
+          onPressed: () async {
+            if (!context.mounted) return;
             Navigator.pop(context, 'Cancel');
           },
           child: const Text(
@@ -214,11 +232,12 @@ void showAuthDialog(BuildContext context, Server selectedServer, VClient client,
               if (protoPerson != null) {
                 me = Person.fromProto(protoPerson!, selectedServer.id);
                 // TODO create device
+                //client.createDevice(dName, dInfo)
                 me.did = <int>[1, 2, 3];
-                if (!context.mounted) return;
                 context.read<PersonProvider>().addPerson(me);
               }
             }
+            if (!context.mounted) return;
             Navigator.pop(context, 'Sent');
           },
           child: const Text('Sent'),
