@@ -27,23 +27,25 @@ class Person {
   @ignore
   late List<Device> devices;
   late List<int> did;
-}
 
-Person makePerson(voxov.Person vp, int serverId) {
-  var ret = Person();
-  ret.serverId = serverId;
-  ret.pid = vp.pid.toBytes();
-  ret.hid = vp.hid.toBytes();
-  ret.balance = vp.balance.toBytes();
-  ret.phone = vp.phone;
-  ret.pName = vp.pname;
-  ret.idDoc = vp.idDoc;
-  ret.dLimit = vp.dlimit;
-  ret.created = vp.created.toBytes();
-  ret.lastIn = vp.lastIn.toBytes();
-  ret.devices = [];
-  ret.did = [];
-  return ret;
+  Person();
+
+  factory Person.fromProto(voxov.Person vp, int serverId) {
+    var ret = Person();
+    ret.serverId = serverId;
+    ret.pid = vp.pid.toBytes();
+    ret.hid = vp.hid.toBytes();
+    ret.balance = vp.balance.toBytes();
+    ret.phone = vp.phone;
+    ret.pName = vp.pname;
+    ret.idDoc = vp.idDoc;
+    ret.dLimit = vp.dlimit;
+    ret.created = vp.created.toBytes();
+    ret.lastIn = vp.lastIn.toBytes();
+    ret.devices = [];
+    ret.did = [];
+    return ret;
+  }
 }
 
 @collection
@@ -69,6 +71,8 @@ class PersonProvider with ChangeNotifier {
   List<Person> get persons => _persons;
   Person? _selected;
   Person? get selected => _selected;
+
+  List<Person> personOnServer(int serverId) => _persons.where((p) => p.serverId==serverId).toList();
 
   late Isar isar;
 
@@ -145,9 +149,13 @@ class PersonWidget extends StatelessWidget {
       body: Column(
         children: context
             .watch<PersonProvider>()
-            .persons
+            .personOnServer(context.watch<ServersProvider>().selected?.id ?? 0)
             .map((person) => ListTile(
-                title: Text(person.pName.isEmpty ? 'Anonymous' : person.pName)))
+                  title:
+                      Text(person.pName.isEmpty ? 'Anonymous' : person.pName),
+                  subtitle: Text(
+                      "${Int64.fromBytes(person.pid)} @ ${context.read<ServersProvider>().servers.singleWhere((s) => s.id == person.serverId).host}"),
+                ))
             .toList(),
       ),
     );
@@ -172,7 +180,8 @@ void showAuthFailedAlert(BuildContext context) {
   );
 }
 
-void showAuthDialog(BuildContext context, Server selectedServer, VClient client, List<String> telMsg) {
+void showAuthDialog(BuildContext context, Server selectedServer, VClient client,
+    List<String> telMsg) {
   showDialog<String>(
     context: context,
     barrierDismissible: false,
@@ -192,18 +201,18 @@ void showAuthDialog(BuildContext context, Server selectedServer, VClient client,
         TextButton(
           onPressed: () {
             Int64? person;
-                () async {
+            () async {
               person = await client.whoAmI(telMsg[0], telMsg[1]);
             }();
             Person? me;
             log(person.toString());
             if (person != null) {
               voxov.Person? protoPerson;
-                  () async {
+              () async {
                 protoPerson = await client.readPerson(person!);
               }();
               if (protoPerson != null) {
-                me = makePerson(protoPerson!, selectedServer.id);
+                me = Person.fromProto(protoPerson!, selectedServer.id);
                 // TODO create device
                 me.did = <int>[1, 2, 3];
                 if (!context.mounted) return;
