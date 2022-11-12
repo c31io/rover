@@ -72,10 +72,9 @@ class VClient {
   }
 
   Future<void> startSession() async {
-    sessionActive = true;
     final r = await createSession();
     token = r.token;
-    if (token.isEmpty) sessionActive = false;
+    if (token.isNotEmpty) sessionActive = true;
   }
 
   Future<void> keepSession() async {
