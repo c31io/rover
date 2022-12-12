@@ -1,5 +1,7 @@
 # rover
 
+This implementation is discontinued.
+
 Main VOxOV Frontend
 
 ## Flutter SDK
